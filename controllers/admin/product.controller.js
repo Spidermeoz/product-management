@@ -2,13 +2,13 @@
 const Product = require("../../models/product.model");
 
 const filterStatusHelper = require("../../helpers/filterStatus");
+const searchHelper = require("../../helpers/search");
 
 module.exports.index = async (req, res) => {
   // console.log(req.query.status)
 
   // Bộ lọc trạng thái
   const filterStatus = filterStatusHelper(req.query);
-
 
   let find = {
     deleted: false,
@@ -17,18 +17,40 @@ module.exports.index = async (req, res) => {
   if (req.query.status) {
     find.status = req.query.status;
   }
+  // End of filter status
 
-  let keyword = "";
-  if (req.query.keyword) {
-    keyword = req.query.keyword;
-    find.title = { $regex: keyword, $options: "i" }; // Tìm kiếm không phân biệt chữ hoa chữ thường
+  // Tìm kiếm theo từ khóa
+  const objectSearch = searchHelper(req.query);
+
+  if (objectSearch.keyword) {
+    find.title = objectSearch.regex;
+  }
+  // End of search
+
+  //Pagination
+  let objectPagination = {
+    currentPage: 1,
+    limitItems: 6
   }
 
-  const products = await Product.find(find);
+  if (req.query.page) {
+    objectPagination.currentPage = parseInt(req.query.page);
+  }
+
+  objectPagination.skip = (objectPagination.currentPage - 1) * objectPagination.limitItems;
+
+  const countProducts = await Product.countDocuments(find);
+  const totalPages = Math.ceil(countProducts / objectPagination.limitItems);
+  objectPagination.totalPages = totalPages;
+  //End of Pagination
+
+  const products = await Product.find(find).limit(objectPagination.limitItems).skip(objectPagination.skip);
+
   res.render("admin/pages/products/index", {
     pageTitle: "Danh sách sản phẩm",
     products: products,
     filterStatus: filterStatus,
-    keyword: keyword,
+    keyword: objectSearch.keyword,
+    pagination: objectPagination
   });
 };

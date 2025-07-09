@@ -38,3 +38,22 @@ if (formSearch) {
   });
 }
 // End search product
+
+// Pagination
+const buttonsPagination = document.querySelectorAll("[button-pagination]");
+if(buttonsPagination){
+  buttonsPagination.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      e.preventDefault(); // Ngăn gửi form mặc định
+      let url = new URL(window.location.href);
+      const page = button.getAttribute("button-pagination");
+      if (page) {
+        url.searchParams.set("page", page);
+      } else {
+        url.searchParams.delete("page");
+      }
+      window.location.href = url.href;
+    });
+  })
+}
+// End pagination
