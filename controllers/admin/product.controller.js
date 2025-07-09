@@ -31,17 +31,24 @@ module.exports.index = async (req, res) => {
   }
 
   let find = {
-    deleted: false,
+    deleted: false
   };
 
   if (req.query.status) {
     find.status = req.query.status;
   }
 
+  let keyword = "";
+  if (req.query.keyword) {
+    keyword = req.query.keyword;
+    find.title = { $regex: keyword, $options: "i" }; // Tìm kiếm không phân biệt chữ hoa chữ thường
+  }
+
   const products = await Product.find(find);
   res.render("admin/pages/products/index", {
     pageTitle: "Danh sách sản phẩm",
     products: products,
-    filterStatus: filterStatus
+    filterStatus: filterStatus,
+    keyword: keyword
   });
 };
