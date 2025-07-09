@@ -1,37 +1,17 @@
 // [GET] /admin/products
 const Product = require("../../models/product.model");
 
+const filterStatusHelper = require("../../helpers/filterStatus");
+
 module.exports.index = async (req, res) => {
   // console.log(req.query.status)
 
-  let filterStatus = [
-    {
-      name: "Tất cả",
-      status: "",
-      class: ""
-    },
-    {
-      name: "Hoạt động",
-      status: "active",
-      class:""
-    },
-    {
-      name: "Dừng hoạt động",
-      status: "inactive",
-      class:""
-    }
-  ];
+  // Bộ lọc trạng thái
+  const filterStatus = filterStatusHelper(req.query);
 
-  if(req.query.status){
-    const index = filterStatus.findIndex(item => item.status === req.query.status);
-    filterStatus[index].class = "active";
-  }else{
-    const index = filterStatus.findIndex(item => item.status === "");
-    filterStatus[index].class = "active";
-  }
 
   let find = {
-    deleted: false
+    deleted: false,
   };
 
   if (req.query.status) {
@@ -49,6 +29,6 @@ module.exports.index = async (req, res) => {
     pageTitle: "Danh sách sản phẩm",
     products: products,
     filterStatus: filterStatus,
-    keyword: keyword
+    keyword: keyword,
   });
 };
