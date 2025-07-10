@@ -87,7 +87,6 @@ if (checkboxMulti) {
           inputCheckAll.checked = false;
         }
       });
-
     });
   });
 }
@@ -100,37 +99,46 @@ if (formChangeMulti) {
     e.preventDefault(); // Ngăn gửi form mặc định
     const checkboxMulti = document.querySelector("[checkbox-multi]");
     const inputChecked = checkboxMulti.querySelectorAll(
-          "input[name='ids']:checked"
+      "input[name='ids']:checked"
     );
 
     // Lấy giá trị của select type
     const typeChange = e.target.elements.type.value;
 
     if (typeChange === "delete-all") {
-      const isConfirm = confirm("Bạn có chắc chắn muốn xóa tất cả sản phẩm đã chọn không?");
+      const isConfirm = confirm(
+        "Bạn có chắc chắn muốn xóa tất cả sản phẩm đã chọn không?"
+      );
       if (!isConfirm) {
         return;
       }
+    }
 
-    if( inputChecked.length >0) {
+    if (inputChecked.length > 0) {
       let Ids = [];
       const inputIds = formChangeMulti.querySelector("input[name='ids']");
 
       inputChecked.forEach((input) => {
         const id = input.value;
-        Ids.push(id);
+
+        if (typeChange === "change-position") {
+          const position = input
+            .closest("tr")
+            .querySelector("input[name='position']").value;
+          Ids.push(`${id}-${position}`);
+        } else {
+          Ids.push(id);
+        }
       });
 
       console.log(Ids.join(","));
       inputIds.value = Ids.join(",");
 
       formChangeMulti.submit();
-    }else{
+    } else {
       alert("Vui lòng chọn ít nhất một sản phẩm để thay đổi trạng thái.");
     }
-  }
-  })
-
-};
+  });
+}
 
 // End form change multi
