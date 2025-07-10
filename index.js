@@ -1,5 +1,6 @@
 const express = require('express');
 const methodOverride = require('method-override');
+const bodyParser = require('body-parser');
 
 const database = require('./config/database');
 
@@ -18,7 +19,9 @@ database.connect();
 app.set('views', './views');
 app.set('view engine', 'pug');
 
+
 app.use(methodOverride('_method'));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // App local variables
 app.locals.prefixAdmin = systemConfig.prefixAdmin;

@@ -41,7 +41,7 @@ if (formSearch) {
 
 // Pagination
 const buttonsPagination = document.querySelectorAll("[button-pagination]");
-if(buttonsPagination){
+if (buttonsPagination) {
   buttonsPagination.forEach((button) => {
     button.addEventListener("click", (e) => {
       e.preventDefault(); // Ngăn gửi form mặc định
@@ -54,6 +54,71 @@ if(buttonsPagination){
       }
       window.location.href = url.href;
     });
-  })
+  });
 }
 // End pagination
+
+// Checkbox multi
+const checkboxMulti = document.querySelector("[checkbox-multi]");
+if (checkboxMulti) {
+  const inputCheckAll = checkboxMulti.querySelector("input[name='checkall']");
+  const inputIds = checkboxMulti.querySelectorAll("input[name='ids']");
+
+  inputCheckAll.addEventListener("click", () => {
+    if (inputCheckAll.checked) {
+      inputIds.forEach((input) => {
+        input.checked = true;
+      });
+    } else {
+      inputIds.forEach((input) => {
+        input.checked = false;
+      });
+    }
+
+    inputIds.forEach((input) => {
+      input.addEventListener("click", () => {
+        const countChecked = checkboxMulti.querySelectorAll(
+          "input[name='ids']:checked"
+        ).length;
+
+        if (countChecked === inputIds.length) {
+          inputCheckAll.checked = true;
+        } else {
+          inputCheckAll.checked = false;
+        }
+      });
+
+    });
+  });
+}
+// End checkbox multi
+
+// Form change multi
+const formChangeMulti = document.querySelector("[form-change-multi]");
+if (formChangeMulti) {
+  formChangeMulti.addEventListener("submit", (e) => {
+    e.preventDefault(); // Ngăn gửi form mặc định
+    const checkboxMulti = document.querySelector("[checkbox-multi]");
+    const inputChecked = checkboxMulti.querySelectorAll(
+          "input[name='ids']:checked"
+    );
+    if( inputChecked.length >0) {
+      let Ids = [];
+      const inputIds = formChangeMulti.querySelector("input[name='ids']");
+
+      inputChecked.forEach((input) => {
+        const id = input.value;
+        Ids.push(id);
+      });
+
+      console.log(Ids.join(","));
+      inputIds.value = Ids.join(",");
+
+      formChangeMulti.submit();
+    }else{
+      alert("Vui lòng chọn ít nhất một sản phẩm để thay đổi trạng thái.");
+    }
+  })
+};
+
+// End form change multi
