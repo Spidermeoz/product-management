@@ -102,6 +102,16 @@ if (formChangeMulti) {
     const inputChecked = checkboxMulti.querySelectorAll(
           "input[name='ids']:checked"
     );
+
+    // Lấy giá trị của select type
+    const typeChange = e.target.elements.type.value;
+
+    if (typeChange === "delete-all") {
+      const isConfirm = confirm("Bạn có chắc chắn muốn xóa tất cả sản phẩm đã chọn không?");
+      if (!isConfirm) {
+        return;
+      }
+
     if( inputChecked.length >0) {
       let Ids = [];
       const inputIds = formChangeMulti.querySelector("input[name='ids']");
@@ -118,7 +128,9 @@ if (formChangeMulti) {
     }else{
       alert("Vui lòng chọn ít nhất một sản phẩm để thay đổi trạng thái.");
     }
+  }
   })
+
 };
 
 // End form change multi
