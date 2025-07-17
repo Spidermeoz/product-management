@@ -1,4 +1,4 @@
-module.exports.loginPost = async (req, res) => {
+module.exports.loginPost = async (req, res, next) => {
   if (!req.body.email) {
     req.flash("error", "Vui lòng nhập email!");
     res.redirect(req.headers.referer);
