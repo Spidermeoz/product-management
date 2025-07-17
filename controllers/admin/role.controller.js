@@ -60,8 +60,6 @@ module.exports.editPatch = async (req, res) => {
     await Role.updateOne({ _id: id }, req.body);
 
     req.flash("success", "Cập nhật nhóm quyền thành công!");
-
-    res.redirect(req.headers.referer);
   } catch (error) {
     req.flash("error", "Cập nhật nhóm quyền thất bại!");
   }
