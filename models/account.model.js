@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 const generate = require("../helpers/generate")
 
-mongoose.plugin(slug);
-
 const accountSchema = new mongoose.Schema({
   fullName: String,
   email: String,
@@ -25,6 +23,6 @@ const accountSchema = new mongoose.Schema({
 }
 );
 
-const Account = mongoose.model("Account",accountSchematSchema, "accounts");
+const Account = mongoose.model("Account",accountSchema, "accounts");
 
 module.exports = Account;
