@@ -3,14 +3,18 @@ const md5 = require("md5");
 const Account = require("../../models/account.model");
 const systemConfig = require("../../config/system");
 
-// // [GET] /admin/dashboard
+// // [GET] /admin/login
 module.exports.login = (req, res) => {
-  res.render("admin/pages/auth/login", {
-    pageTitle: "Trang đăng nhập",
-  });
+  if (req.cookies.token) {
+    res.redirect(`${systemConfig.prefixAdmin}/dashboard`);
+  } else {
+    res.render("admin/pages/auth/login", {
+      pageTitle: "Đăng nhập",
+    });
+  }
 };
 
-// // [POST] /admin/dashboard
+// // [POST] /admin/login
 module.exports.loginPost = async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
