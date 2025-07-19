@@ -2,7 +2,6 @@ const Product = require("../../models/product.model");
 
 // [GET] /products
 module.exports.index = async (req, res) => {
-  console.log("Product controller index called");
   const products = await Product.find({
     status: "active", // Lấy tất cả sản phẩm có trạng thái active
     deleted: false // Lấy tất cả sản phẩm chưa bị xóa
@@ -13,8 +12,6 @@ module.exports.index = async (req, res) => {
     item.priceNew = item.priceNew.toFixed(2); // Làm tròn đến 2 chữ số thập phân
     return item;
   })
-
-  console.log(products); // In ra console để kiểm tra
 
   res.render("client/pages/products/index", {
   pageTitle: "Trang danh sách sản phẩm",
