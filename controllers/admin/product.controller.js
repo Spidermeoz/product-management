@@ -66,7 +66,7 @@ module.exports.index = async (req, res) => {
       _id: product.createdBy.account_id,
     });
     if (user) {
-      product.accountFullName= user.fullName;
+      product.accountFullName = user.fullName;
     } else {
     }
   }
@@ -117,7 +117,13 @@ module.exports.changeMulti = async (req, res) => {
     case "delete-all":
       await Product.updateMany(
         { _id: { $in: ids } },
-        { deleted: true, deletedAt: new Date() }
+        {
+          deleted: true,
+          deletedBy: {
+            account_id: res.locals.user.id,
+            deletedAt: new Date(),
+          },
+        }
       );
       req.flash("success", `Đã xóa thành công ${ids.length} sản phẩm!`);
       break;
@@ -143,7 +149,13 @@ module.exports.deleteItem = async (req, res) => {
 
   await Product.updateOne(
     { _id: id },
-    { deleted: true, deletedAt: new Date() }
+    {
+      deleted: true,
+      deletedBy: {
+        account_id: res.locals.user.id,
+        deletedAt: new Date(),
+      },
+    }
   );
   req.flash("success", `Đã xóa thành công sản phẩm!`);
   res.redirect(req.headers.referer);
@@ -178,7 +190,7 @@ module.exports.createPost = async (req, res) => {
   }
 
   req.body.createdBy = {
-    account_id: res.locals.user.id
+    account_id: res.locals.user.id,
   };
 
   const product = new Product(req.body);
@@ -198,7 +210,7 @@ module.exports.edit = async (req, res) => {
     const product = await Product.findOne(find);
 
     const category = await ProductCategory.find({
-      deleted: false
+      deleted: false,
     });
 
     const newCategory = createTreeHelper.tree(category);
@@ -206,7 +218,7 @@ module.exports.edit = async (req, res) => {
     res.render("admin/pages/products/edit", {
       pageTitle: "Chỉnh sửa sản phẩm",
       product: product,
-      category: newCategory
+      category: newCategory,
     });
   } catch (error) {
     req.flash("error", `Sản phẩm không tồn tại!`);
