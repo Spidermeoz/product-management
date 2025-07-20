@@ -4,5 +4,13 @@ module.exports.priceNewProducts = (products) => {
     item.priceNew = item.priceNew.toFixed(2); // Làm tròn đến 2 chữ số thập phân
     return item;
   });
-    return newProducts;
+  return newProducts;
+};
+
+module.exports.priceNewProduct = (product) => {
+  const priceNew = (
+    product.price -
+    (product.price * product.discountPercentage) / 100
+  ).toFixed(2); // Làm tròn đến 2 chữ số thập phân
+  return priceNew;
 };
