@@ -293,9 +293,9 @@ module.exports.editPatch = async (req, res) => {
   req.body.stock = parseInt(req.body.stock);
   req.body.position = parseInt(req.body.position);
 
-  if (req.file) {
-    req.body.thumbnail = `/uploads/${req.file.filename}`;
-  }
+  // if (req.file) {
+  //   req.body.thumbnail = `/uploads/${req.file.filename}`;
+  // }
 
   try {
     const updatedBy = {
@@ -312,7 +312,8 @@ module.exports.editPatch = async (req, res) => {
         },
       }
     );
-    req.flash("success", `cập nhật thành công!`);
+    // await Product.updateOne({ _id: id }, req.body);
+    // req.flash("success", `cập nhật thành công!`);
   } catch (error) {
     console.log(error);
     req.flash("error", `Cập nhật thất bại!`);
