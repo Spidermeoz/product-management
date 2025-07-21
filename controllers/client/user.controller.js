@@ -11,23 +11,62 @@ module.exports.register = (req, res) => {
 
 // [POST] /user/register
 module.exports.registerPost = async (req, res) => {
-  console.log(req.body);
-
   const existEmail = await User.findOne({ email: req.body.email });
   if (existEmail) {
     req.flash("error", "Email đã được sử dụng");
     res.redirect(req.headers.referer);
     return;
   }
-  
+
   req.body.password = md5(req.body.password);
 
   const user = new User(req.body);
   await user.save();
 
-  res.cookie("tokenUser", user.tokenUser)
+  res.cookie("tokenUser", user.tokenUser);
 
   console.log("User created:", user);
+
+  res.redirect("/");
+};
+
+// [GET] /user/login
+module.exports.login = (req, res) => {
+  res.render("client/pages/user/login", {
+    pageTitle: "Đăng nhập",
+  });
+};
+
+// [POST] /user/login
+module.exports.loginPost = async (req, res) => {
+  const email = req.body.email;
+  const password = md5(req.body.password);
+
+  const user = await User.findOne({
+    email: email,
+    deleted: false,
+  });
+
+
+  if (!user) {
+    req.flash("error", "Email không tồn tại!");
+    res.redirect(req.headers.referer);
+    return;
+  }
+
+  if (user.password !== password) {
+    req.flash("error", "Mật khẩu không đúng!");
+    res.redirect(req.headers.referer);
+    return;
+  }
+
+  if (user.status === "inactive") {
+    req.flash("error", "Tài khoản của bạn đã bị khóa!");
+    res.redirect(req.headers.referer);
+    return;
+  }
+
+  res.cookie("tokenUser", user.tokenUser);
 
   res.redirect("/");
 };
