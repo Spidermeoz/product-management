@@ -1,20 +1,32 @@
 const Cart = require("../../models/cart.model");
 
 module.exports.cartId = async (req, res, next) => {
-  console.log(req.cookies.cartId);
+  try {
+    if (!req.cookies.cartId) {
+      const cart = new Cart();
+      await cart.save();
 
-  if (!req.cookies.cartId) {
-    // Tạo giỏ hang mới nếu không có cartId
-    const cart = new Cart();
-    await cart.save();
+      const expiresCookie = 365 * 24 * 60 * 60 * 1000;
 
-    const expiresCookie = 365 * 24 * 60 * 60 * 1000; // Hết hạn sau 1 năm
+      res.cookie("cartId", cart.id, {
+        expires: new Date(Date.now() + expiresCookie),
+      });
+    } else {
+      const cart = await Cart.findOne({
+        _id: req.cookies.cartId,
+      });
 
-    res.cookie("cartId", cart._id, {
-      expires: new Date(Date.now() + expiresCookie), // Hết hạn sau 1 năm
-    });
-  } else {
+      cart.totalQuantity = cart.products.reduce(
+        (sum, item) => sum + item.quantity,
+        0
+      );
+
+      res.locals.miniCart = cart;
+    }
+
+    next();
+  } catch (error) {
+    console.error("Error in cart middleware:", error);
+    next(error);
   }
-
-  next();
 };
