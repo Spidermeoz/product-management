@@ -1,4 +1,42 @@
 const Cart = require("../../models/cart.model");
+const Product = require("../../models/product.model");
+
+const productsHelper = require("../../helpers/products");
+
+// [GET] /cart
+module.exports.index = async (req, res) => {
+  const cartId = req.cookies.cartId;
+
+  const cart = await Cart.findOne({ _id: cartId });
+
+  if (cart.products.length > 0) {
+    for (const item of cart.products) {
+      const productId = item.product_id;
+      const productInfo = await Product.findOne({ _id: productId }).select(
+        "title thumbnail slug price discountPercentage"
+      );
+
+      productInfo.priceNew = productsHelper.priceNewProduct(productInfo)
+
+      item.productInfo = productInfo;
+
+      item.totalPrice = (
+        item.productInfo.priceNew * item.quantity
+      ).toFixed(2);
+    }
+  }
+
+  cart.totalPrice = cart.products.reduce((sum, item) => {
+    return sum + parseFloat(item.totalPrice);
+  }, 0);
+
+  console.log(cart);
+
+  res.render("client/pages/cart/index", {
+    title: "Giỏ hàng",
+    cartDetail: cart,
+  });
+};
 
 // [POST] /cart/add/:productId
 module.exports.addPost = async (req, res) => {

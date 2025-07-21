@@ -12,5 +12,5 @@ module.exports.priceNewProduct = (product) => {
     product.price -
     (product.price * product.discountPercentage) / 100
   ).toFixed(2); // Làm tròn đến 2 chữ số thập phân
-  return priceNew;
+  return parseFloat(priceNew);
 };
