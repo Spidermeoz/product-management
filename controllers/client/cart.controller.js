@@ -16,21 +16,17 @@ module.exports.index = async (req, res) => {
         "title thumbnail slug price discountPercentage"
       );
 
-      productInfo.priceNew = productsHelper.priceNewProduct(productInfo)
+      productInfo.priceNew = productsHelper.priceNewProduct(productInfo);
 
       item.productInfo = productInfo;
 
-      item.totalPrice = (
-        item.productInfo.priceNew * item.quantity
-      ).toFixed(2);
+      item.totalPrice = (item.productInfo.priceNew * item.quantity).toFixed(2);
     }
   }
 
   cart.totalPrice = cart.products.reduce((sum, item) => {
     return sum + parseFloat(item.totalPrice);
   }, 0);
-
-  console.log(cart);
 
   res.render("client/pages/cart/index", {
     title: "Giỏ hàng",
@@ -77,6 +73,22 @@ module.exports.addPost = async (req, res) => {
   }
 
   req.flash("success", "Thêm sản phẩm vào giỏ hàng thành công");
+
+  res.redirect(req.headers.referer);
+};
+
+// [GET] /cart/delete/:productId
+module.exports.delete = async (req, res) => {
+  const cartId = req.cookies.cartId;
+  const productId = req.params.productId;
+
+  await Cart.updateOne({
+    _id: cartId,
+  }, {
+    $pull: { products: { product_id: productId } },
+  })
+
+  req.flash("success", "Xoá sản phẩm khỏi giỏ hàng thành công");
 
   res.redirect(req.headers.referer);
 };
