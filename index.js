@@ -6,6 +6,8 @@ const flash = require("express-flash");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const moment = require("moment");
+const http = require("http");
+const { Server } = require("socket.io");
 
 const database = require("./config/database");
 
@@ -18,6 +20,18 @@ const routeAdmin = require("./routes/admin/index.route");
 
 const app = express();
 const port = process.env.PORT;
+
+// SocketIO
+const server = http.createServer(app);
+const io = new Server(server);
+
+io.on("connection", (socket) => {
+  console.log("a user connected", socket.id);
+  // socket.on("disconnect", () => {
+  //   console.log("user disconnected");
+  // });
+});
+// End SocketIO
 
 database.connect();
 
@@ -58,12 +72,12 @@ app.use(express.static(`${__dirname}/public`));
 routeAdmin(app);
 route(app);
 
-app.get('/*\w', (req, res) => {
+app.get("/*w", (req, res) => {
   res.render("client/pages/errors/404", {
     pageTitle: "404 Not Found",
   });
 });
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`app listening at http://localhost:${port}`);
 });
