@@ -43,7 +43,6 @@ module.exports.request = async (req, res) => {
   })
 
   const requestFriends = myUser.requestFriends
-  const acceptFriends = myUser.acceptFriends
 
   const users = await User.find({
     _id: { $in: requestFriends },
@@ -53,6 +52,31 @@ module.exports.request = async (req, res) => {
 
   res.render("client/pages/users/request.pug", {
     pageTitle: "Lời mời đã gửi",
+    users: users
+  });
+};
+
+// [GET] /user/request
+module.exports.request = async (req, res) => {
+  // SocketIO
+    usersSocket(res)
+    // End SocketIO
+  const userId = res.locals.user.id;
+
+  const myUser = await User.findOne({
+    _id: userId
+  })
+  
+  const acceptFriends = myUser.acceptFriends
+
+  const users = await User.find({
+    _id: { $in: acceptFriends },
+    status: "active",
+    deleted: false,
+  }).select("id avatar fullName");
+
+  res.render("client/pages/users/accept.pug", {
+    pageTitle: "Lời mời đã nhận",
     users: users
   });
 };

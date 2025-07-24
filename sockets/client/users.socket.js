@@ -7,8 +7,8 @@ module.exports = (res) => {
     socket.on("CLIENT_ADD_FRIEND", async (userId) => {
       const myUserId = res.locals.user.id;
 
-    //   console.log(myUserId);
-    //   console.log(userId);
+    //   console.log(myUserId); A
+    //   console.log(userId);   B
       // Thêm id của A và acceptFriends của B
       existIdAinB = await User.findOne({
         _id: userId,
@@ -49,8 +49,8 @@ module.exports = (res) => {
     socket.on("CLIENT_CANCEL_FRIEND", async (userId) => {
       const myUserId = res.locals.user.id;
 
-    //   console.log(myUserId);
-    //   console.log(userId);
+    //   console.log(myUserId); A
+    //   console.log(userId);   B
       // Xóa id của A trong acceptFriends của B
       existIdAinB = await User.findOne({
         _id: userId,
@@ -86,6 +86,48 @@ module.exports = (res) => {
       // End Xóa id của B trong requestFriends của A
     });
     // End Chức năng hủy gửi yêu cầu kết bạn
+
+    // Chức năng xóa lời mời kết bạn
+    socket.on("CLIENT_REFUSE_FRIEND", async (userId) => {
+      const myUserId = res.locals.user.id;
+
+    //   console.log(myUserId); B
+    //   console.log(userId);   A
+      // Xóa id của A trong acceptFriends của B
+      existIdAinB = await User.findOne({
+        _id: myUserId,
+        acceptFriends: userId,
+      });
+      if (existIdAinB) {
+        await User.updateOne(
+          {
+            _id: myUserId,
+          },
+          {
+            $pull: { acceptFriends: userId },
+          }
+        );
+      }
+      // End Xóa id của A trong acceptFriends của B
+
+      // Xóa id của B trong requestFriends của A
+      existIdBinA = await User.findOne({
+        _id: userId,
+        requestFriends: myUserId,
+      });
+      if (existIdBinA) {
+        await User.updateOne(
+          {
+            _id: userId,
+          },
+          {
+            $pull: { requestFriends: myUserId },
+          }
+        );
+      }
+      // End Xóa id của B trong requestFriends của A
+    });
+    // End Chức năng xóa lời mời kết bạn
   });
   // End SocketIO
 };
