@@ -49,8 +49,8 @@ module.exports = (res) => {
 
       socket.broadcast.emit("SERVER_RETURN_LENGTH_ACCEPT_FRIEND", {
         user_id: userId,
-        lengthAcceptFriends: lengthAcceptFriends
-      })
+        lengthAcceptFriends: lengthAcceptFriends,
+      });
     });
 
     // Chức năng hủy gửi yêu cầu kết bạn
@@ -90,6 +90,18 @@ module.exports = (res) => {
           }
         );
       }
+      
+      // Lấy ra độ dài acceptFriends của B và trả về cho B
+      const infoUser = await User.findOne({
+        _id: userId,
+      });
+
+      const lengthAcceptFriends = infoUser.acceptFriends.length;
+
+      socket.broadcast.emit("SERVER_RETURN_LENGTH_ACCEPT_FRIEND", {
+        user_id: userId,
+        lengthAcceptFriends: lengthAcceptFriends,
+      });
     });
 
     // Chức năng xóa lời mời kết bạn
