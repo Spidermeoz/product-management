@@ -6,9 +6,9 @@ module.exports = (res) => {
     // Chức năng gửi yêu cầu kết bạn
     socket.on("CLIENT_ADD_FRIEND", async (userId) => {
       const myUserId = res.locals.user.id;
+      // console.log(myUserId); A
+      // console.log(userId);   B
 
-    //   console.log(myUserId); A
-    //   console.log(userId);   B
       // Thêm id của A và acceptFriends của B
       existIdAinB = await User.findOne({
         _id: userId,
@@ -24,7 +24,6 @@ module.exports = (res) => {
           }
         );
       }
-      // End Thêm id của A và acceptFriends của B
 
       // Thêm id của B vào requestFriends của A
       existIdBinA = await User.findOne({
@@ -41,16 +40,25 @@ module.exports = (res) => {
           }
         );
       }
-      // End Thêm id của B vào requestFriends của A
+
+      // Lấy ra độ dài acceptFriends của B và trả về cho B
+      const infoUser = await User.findOne({
+        _id: userId,
+      });
+      const lengthAcceptFriends = infoUser.acceptFriends.length;
+
+      socket.broadcast.emit("SERVER_RETURN_LENGTH_ACCEPT_FRIEND", {
+        user_id: userId,
+        lengthAcceptFriends: lengthAcceptFriends
+      })
     });
-    // End Chức năng gửi yêu cầu kết bạn
 
     // Chức năng hủy gửi yêu cầu kết bạn
     socket.on("CLIENT_CANCEL_FRIEND", async (userId) => {
       const myUserId = res.locals.user.id;
+      // console.log(myUserId); A
+      // console.log(userId);   B
 
-    //   console.log(myUserId); A
-    //   console.log(userId);   B
       // Xóa id của A trong acceptFriends của B
       existIdAinB = await User.findOne({
         _id: userId,
@@ -66,7 +74,6 @@ module.exports = (res) => {
           }
         );
       }
-      // End Xóa id của A trong acceptFriends của B
 
       // Xóa id của B trong requestFriends của A
       existIdBinA = await User.findOne({
@@ -83,16 +90,14 @@ module.exports = (res) => {
           }
         );
       }
-      // End Xóa id của B trong requestFriends của A
     });
-    // End Chức năng hủy gửi yêu cầu kết bạn
 
     // Chức năng xóa lời mời kết bạn
     socket.on("CLIENT_REFUSE_FRIEND", async (userId) => {
       const myUserId = res.locals.user.id;
+      // console.log(myUserId); B
+      // console.log(userId);   A
 
-    //   console.log(myUserId); B
-    //   console.log(userId);   A
       // Xóa id của A trong acceptFriends của B
       existIdAinB = await User.findOne({
         _id: myUserId,
@@ -108,7 +113,6 @@ module.exports = (res) => {
           }
         );
       }
-      // End Xóa id của A trong acceptFriends của B
 
       // Xóa id của B trong requestFriends của A
       existIdBinA = await User.findOne({
@@ -125,16 +129,14 @@ module.exports = (res) => {
           }
         );
       }
-      // End Xóa id của B trong requestFriends của A
     });
-    // End Chức năng xóa lời mời kết bạn
 
     // Chức năng chấp nhận lời mời kết bạn
     socket.on("CLIENT_ACCEPT_FRIEND", async (userId) => {
       const myUserId = res.locals.user.id;
+      // console.log(myUserId); B
+      // console.log(userId);   A
 
-    //   console.log(myUserId); B
-    //   console.log(userId);   A
       // Xóa id của A trong acceptFriends của B và Thêm {user_id, room_chat_id} của A vào friendList của B
       existIdAinB = await User.findOne({
         _id: myUserId,
@@ -147,16 +149,15 @@ module.exports = (res) => {
           },
           {
             $push: {
-                friendList: {
-                    user_id: userId, 
-                    room_chat_id: ""
-                }
+              friendList: {
+                user_id: userId,
+                room_chat_id: "",
+              },
             },
             $pull: { acceptFriends: userId },
           }
         );
       }
-      // End Xóa id của A trong acceptFriends của B và Thêm {user_id, room_chat_id} của A vào friendList của B
 
       // Xóa id của B trong requestFriends của A và Thêm {user_id, room_chat_id} của B vào friendList của A
       existIdBinA = await User.findOne({
@@ -170,19 +171,16 @@ module.exports = (res) => {
           },
           {
             $push: {
-                friendList: {
-                    user_id: myUserId, 
-                    room_chat_id: ""
-                }
+              friendList: {
+                user_id: myUserId,
+                room_chat_id: "",
+              },
             },
             $pull: { requestFriends: myUserId },
           }
         );
       }
-      // End Xóa id của B trong requestFriends của A và Thêm {user_id, room_chat_id} của B vào friendList của A
-
     });
-    // End Chức năng chấp nhận lời mời kết bạn
   });
   // End SocketIO
 };

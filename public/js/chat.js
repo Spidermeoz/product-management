@@ -8,7 +8,6 @@ const upload = new FileUploadWithPreview.FileUploadWithPreview(
     maxFileCount: 6,
   }
 );
-// End file-upload-with-preview
 
 // CLIENT_SEND_MESSAGE
 const formSendData = document.querySelector(".chat .inner-form");
@@ -30,7 +29,6 @@ if (formSendData) {
     }
   });
 }
-// End CLIENT_SEND_MESSAGE
 
 // SERVER_RETURN_MESSAGE
 socket.on("SERVER_RETURN_MESSAGE", (data) => {
@@ -75,17 +73,14 @@ socket.on("SERVER_RETURN_MESSAGE", (data) => {
   // Preview image
   const gallery = new Viewer(div);
 });
-// End SERVER_RETURN_MESSAGE
 
 // Scroll chat to bottom
 const bodyChat = document.querySelector(".chat .inner-body");
 if (bodyChat) {
   bodyChat.scrollTop = bodyChat.scrollHeight;
 }
-// End Scroll chat to bottom
 
 // Show icon chat
-
 // Show popup
 const buttonIcon = document.querySelector(".button-icon");
 if (buttonIcon) {
@@ -96,7 +91,6 @@ if (buttonIcon) {
     tooltip.classList.toggle("shown");
   };
 }
-// End Show popup
 
 // Show Typing
 var timeOut;
@@ -109,10 +103,8 @@ const showTyping = () => {
     socket.emit("CLIENT_SEND_TYPING", "hidden");
   }, 3000);
 };
-// End Show Typing
 
 // Insert icon to input
-
 const emojiPicker = document.querySelector("emoji-picker");
 if (emojiPicker) {
   const inputChat = document.querySelector(
@@ -126,7 +118,6 @@ if (emojiPicker) {
     const end = inputChat.value.length;
     inputChat.setSelectionRange(end, end);
     inputChat.focus();
-    // End Setup để con trỏ chuột luôn ở vị trí cuối cùng
 
     showTyping();
   });
@@ -136,8 +127,6 @@ if (emojiPicker) {
   });
   // End Input keyup
 }
-// End Insert icon to input
-
 // End Show icon chat
 
 // SERVER_RETURN_TYPING
@@ -178,11 +167,9 @@ if (elementListTyping) {
     }
   });
 }
-// End SERVER_RETURN_TYPING
 
 // Preview full image
 const bodyChatPreviewImage = document.querySelector(".chat .inner-body")
 if(bodyChatPreviewImage){
   const gallery = new Viewer(bodyChatPreviewImage);
 }
-// End Preview full image
