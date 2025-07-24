@@ -11,12 +11,9 @@ module.exports.notFriend = async (req, res) => {
   const myUser = await User.findOne({
     _id: userId
   })
-  console.log(myUser)
 
   const requestFriends = myUser.requestFriends
   const acceptFriends = myUser.acceptFriends
-
-  console.log(requestFriends, acceptFriends)
 
   const users = await User.find({
     $and: [
@@ -27,10 +24,35 @@ module.exports.notFriend = async (req, res) => {
     status: "active",
     deleted: false,
   }).select("id avatar fullName");
-  console.log(users)
 
   res.render("client/pages/users/not-friend.pug", {
     pageTitle: "Danh sách người dùng",
     users: users,
+  });
+};
+
+// [GET] /user/request
+module.exports.request = async (req, res) => {
+  // SocketIO
+    usersSocket(res)
+    // End SocketIO
+  const userId = res.locals.user.id;
+
+  const myUser = await User.findOne({
+    _id: userId
+  })
+
+  const requestFriends = myUser.requestFriends
+  const acceptFriends = myUser.acceptFriends
+
+  const users = await User.find({
+    _id: { $in: requestFriends },
+    status: "active",
+    deleted: false,
+  }).select("id avatar fullName");
+
+  res.render("client/pages/users/request.pug", {
+    pageTitle: "Lời mời đã gửi",
+    users: users
   });
 };
