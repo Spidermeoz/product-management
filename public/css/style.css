@@ -458,3 +458,104 @@
   }
 }
 /* End Typing */
+
+/* Box users */
+/* Container user box */
+.box-user {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s;
+}
+
+.box-user:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Avatar section */
+.box-user .inner-avatar {
+  flex-shrink: 0;
+  margin-right: 15px;
+}
+
+.box-user .inner-avatar img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #007bff;
+}
+
+/* Info section (name + buttons) */
+.box-user .inner-info {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Name */
+.box-user .inner-name {
+  font-weight: bold;
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+/* Buttons row */
+.box-user .inner-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+/* Buttons */
+.box-user .inner-buttons button {
+  padding: 4px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border: none;
+}
+
+.box-user .inner-buttons .btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.box-user .inner-buttons .btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.box-user .inner-buttons .btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.box-user .inner-buttons .btn-secondary:hover {
+  background-color: #545b62;
+}
+
+.box-user .inner-info .inner-name {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.box-user [btn-cancel-friend] {
+  display: none;
+}
+
+.box-user.add [btn-add-friend] {
+  display: none;
+}
+
+.box-user.add [btn-cancel-friend] {
+  display: inline-block;
+}
+
+/* EndBox users */
