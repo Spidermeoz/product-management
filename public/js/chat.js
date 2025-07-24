@@ -71,6 +71,9 @@ socket.on("SERVER_RETURN_MESSAGE", (data) => {
   body.insertBefore(div, boxTyping);
 
   bodyChat.scrollTop = bodyChat.scrollHeight;
+
+  // Preview image
+  const gallery = new Viewer(div);
 });
 // End SERVER_RETURN_MESSAGE
 
@@ -175,5 +178,11 @@ if (elementListTyping) {
     }
   });
 }
-
 // End SERVER_RETURN_TYPING
+
+// Preview full image
+const bodyChatPreviewImage = document.querySelector(".chat .inner-body")
+if(bodyChatPreviewImage){
+  const gallery = new Viewer(bodyChatPreviewImage);
+}
+// End Preview full image

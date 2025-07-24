@@ -4,11 +4,17 @@ html
     head 
         title #{pageTitle}
 
+        // bootstrap4
         link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css")
 
+        // font-awesome
         link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css")
 
+        // file-upload-with-preview
         link(rel="stylesheet", type="text/css" href="https://unpkg.com/file-upload-with-preview/dist/style.css")
+
+        // viewerjs
+        link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.css")
 
         link(rel="stylesheet", href="/css/style.css")
     body
@@ -33,6 +39,10 @@ html
         // file-upload-with-preview
         script(src="https://unpkg.com/file-upload-with-preview/dist/index.iife.js") 
         // End file-upload-with-preview
+
+        // viewerjs
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.7/viewer.js") 
+        // End viewerjs
         
         script(type="module" src="/js/chat.js")
 
