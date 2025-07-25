@@ -78,7 +78,7 @@ module.exports = (res) => {
         await User.updateOne(
           {
             _id: userId,
-          },
+          },  
           {
             $pull: { acceptFriends: myUserId },
           }
@@ -111,6 +111,12 @@ module.exports = (res) => {
       socket.broadcast.emit("SERVER_RETURN_LENGTH_ACCEPT_FRIEND", {
         user_id: userId,
         lengthAcceptFriends: lengthAcceptFriends,
+      });
+
+      // Lấy id của A trả về cho B
+      socket.broadcast.emit("SERVER_RETURN_USER_ID_CANCEL_FRIEND", {
+        user_id_B: userId,
+        user_id_A: myUserId,
       });
     });
 
