@@ -590,4 +590,14 @@
   display: inline-block;
 }
 
+.box-user .inner-status {
+  font-size: 12px;
+  color: #0d8000;
+  opacity: 0;
+}
+
+.box-user .inner-status[status="online"] {
+  opacity: 1;
+}
+
 /* EndBox users */
